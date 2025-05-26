@@ -4,10 +4,13 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from preprocesamiento import preprocess_and_save, TOKENIZER_PATH
 from model import build_seq2seq_model
 import pickle
+import tensorflow as tf
+print(tf.config.list_physical_devices('GPU'))
+
 
 MODEL_PATH = 'models/chatbot_model.keras'
 BATCH_SIZE = 64
-EPOCHS     = 50
+EPOCHS     = 8
 
 def train_model():
     enc_in, dec_in, dec_trg = preprocess_and_save()
