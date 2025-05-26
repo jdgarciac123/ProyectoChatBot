@@ -1,17 +1,26 @@
 import os
 import numpy as np
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
-from preprocesamiento import preprocess_and_save
+from preprocesamiento import preprocess_and_save, TOKENIZER_PATH
 from model import build_seq2seq_model
+import pickle
 
-MODEL_PATH = 'models/chatbot_model.h5'
+MODEL_PATH = 'models/chatbot_model.keras'
 BATCH_SIZE = 64
 EPOCHS     = 50
 
 def train_model():
     enc_in, dec_in, dec_trg = preprocess_and_save()
+
+    # Carga el tokenizer para obtener vocab_size real
+    with open(TOKENIZER_PATH, 'rb') as f:
+        tokenizer = pickle.load(f)
+    
+    vocab_size = int(len(tokenizer.word_index) + 1)
+    print(f"VOCAB SIZE QUE LLEGA AL MODELO: {vocab_size}")
+
     model = build_seq2seq_model(
-        vocab_size=None  # Toma VOCAB_SIZE interno
+        vocab_size=vocab_size 
     )
     model.compile(
         optimizer='adam',
